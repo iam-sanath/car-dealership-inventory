@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
-    "test": "jest --coverage",
-    "test:watch": "jest --watch"
-  },
+  "dev": "tsx watch src/server.ts",
+  "build": "prisma generate && tsc",
+  "start": "prisma migrate deploy && node dist/server.js",
+  "test": "jest --coverage",
+  "test:watch": "jest --watch",
+  "create-admin": "tsx src/scripts/createAdmin.ts",
+  "seed": "tsx src/scripts/seedVehicles.ts"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
