@@ -77,6 +77,34 @@ export class VehicleService {
   async delete(id: number): Promise<void> {
     if (!(await this.vehicles.delete(id))) throw new HttpError(404, "vehicle not found");
   }
+   
+    /** Buys `quantity` units (default 1). Never lets stock go below zero. */
+  async purchase(id: number, quantity: unknown = 1): Promise<VehicleRecord> {
+    const amount = positiveInteger(quantity, 1, "quantity");
+    const vehicle = await this.requireVehicle(id);
+    if (vehicle.quantity < amount) throw new HttpError(409, "not enough stock");
+
+    // The repository subtracts atomically, so two buyers cannot both take the last unit.
+    const updated = await this.vehicles.decrementStock(id, amount);
+    if (!updated) throw new HttpError(409, "not enough stock");
+    return updated;
+  }
+
+  async restock(id: number, quantity: unknown): Promise<VehicleRecord> {
+    if (quantity === undefined || quantity === "") throw new HttpError(400, "quantity is required");
+    const amount = positiveInteger(quantity, 1, "quantity");
+    await this.requireVehicle(id);
+
+    const updated = await this.vehicles.incrementStock(id, amount);
+    if (!updated) throw new HttpError(404, "vehicle not found");
+    return updated;
+  }
+
+  private async requireVehicle(id: number): Promise<VehicleRecord> {
+    const vehicle = await this.vehicles.findById(id);
+    if (!vehicle) throw new HttpError(404, "vehicle not found");
+    return vehicle;
+  }
 
   private parse(input: Record<string, unknown>): VehicleInput {
     try {
