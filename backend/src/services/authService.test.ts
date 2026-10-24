@@ -1,21 +1,9 @@
 import jwt from "jsonwebtoken";
 import { AuthService } from "./authService";
-import { NewUser, UserRecord, UserRepository } from "../repositories/userRepository";
+import { FakeUserRepository } from "../testing/fakeUserRepository";
 
 /** In-memory stand-in for the database, used only in tests. */
-class FakeUserRepository implements UserRepository {
-  users: UserRecord[] = [];
 
-  async findByEmail(email: string) {
-    return this.users.find((u) => u.email === email) ?? null;
-  }
-
-  async create(data: NewUser) {
-    const user: UserRecord = { id: this.users.length + 1, role: "USER", ...data };
-    this.users.push(user);
-    return user;
-  }
-}
 
 const SECRET = "test-secret";
 const valid = { name: "Asha", email: "asha@example.com", password: "password123" };
