@@ -118,3 +118,47 @@ describe("VehicleService.delete", () => {
     await expect(service.delete(99)).rejects.toMatchObject({ status: 404 });
   });
 });
+
+describe("VehicleService.purchase", () => {
+  beforeEach(seedAll);
+
+  it("decreases stock by one by default", async () => {
+    expect((await service.purchase(1)).quantity).toBe(4);
+  });
+
+  it("decreases stock by the requested amount", async () => {
+    expect((await service.purchase(1, 2)).quantity).toBe(3);
+  });
+
+  it("returns 409 when the vehicle is out of stock", async () => {
+    await expect(service.purchase(3)).rejects.toMatchObject({ status: 409 });
+  });
+
+  it("returns 409 when asking for more than is in stock", async () => {
+    await expect(service.purchase(2, 10)).rejects.toMatchObject({ status: 409 });
+  });
+
+  it("returns 404 for an unknown vehicle", async () => {
+    await expect(service.purchase(99)).rejects.toMatchObject({ status: 404 });
+  });
+
+  it.each([0, 1.5, "x"])("rejects invalid quantity %p with 400", async (quantity) => {
+    await expect(service.purchase(1, quantity)).rejects.toMatchObject({ status: 400 });
+  });
+});
+
+describe("VehicleService.restock", () => {
+  beforeEach(seedAll);
+
+  it("increases stock", async () => {
+    expect((await service.restock(3, 10)).quantity).toBe(10);
+  });
+
+  it("returns 404 for an unknown vehicle", async () => {
+    await expect(service.restock(99, 5)).rejects.toMatchObject({ status: 404 });
+  });
+
+  it.each([undefined, 0, -3, 1.5])("rejects invalid quantity %p with 400", async (quantity) => {
+    await expect(service.restock(1, quantity)).rejects.toMatchObject({ status: 400 });
+  });
+});
