@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 import { HttpError } from "../errors";
 import { UserRecord, UserRepository } from "../repositories/userRepository";
 
+
+
+
 export interface Credentials {
   name?: unknown;
   email?: unknown;
@@ -15,6 +18,10 @@ export interface PublicUser {
   email: string;
   role: "USER" | "ADMIN";
 }
+
+const MIN_PASSWORD_LENGTH = 8;
+const BCRYPT_ROUNDS = 10;
+const TOKEN_TTL = "1d";
 
 export class AuthService {
   constructor(private readonly users: UserRepository, private readonly jwtSecret: string) {}
