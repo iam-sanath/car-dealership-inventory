@@ -2,7 +2,7 @@
 
 A full-stack inventory system for a car dealership, built test-first (TDD) 
 
-**Live demo:** 
+**Live demo:** https://car-dealership-inventory-h463.onrender.com
 (Hosted on a free tier. If it has been idle, the first load can take about a minute while the server wakes up.)
 
 **Demo admin login:** `admin@example.com` / `YourPassword123`
@@ -80,7 +80,7 @@ npm test
 - **One deployable.** The Express server serves the built React app, so there is a single URL and no CORS configuration.
 
 ## Test report
-<<PASTE THE SUMMARY FROM test-report.txt HERE: suites, tests, coverage table>>
+
 
 The full output is in [`backend/test-report.txt`](backend/test-report.txt). Backend tests were written first (red), then the implementation (green), then refactored; the git history shows the red, green and refactor commits separately. Prisma repositories and server start-up are excluded from coverage because they only talk to the real database.
 
