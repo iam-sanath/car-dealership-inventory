@@ -1,4 +1,4 @@
-# Showroom: Car Dealership Inventory System
+# Car Dealership Inventory System
 
 A full-stack inventory system for a car dealership, built test-first (TDD) 
 
